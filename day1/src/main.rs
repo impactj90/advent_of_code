@@ -20,7 +20,7 @@ fn find_digits(line: &String) -> (u32, u32) {
 }
 
 fn concat_numbers(first: u32, last: u32) -> u32 {
-    println!("cocnat: {}",(first * 10) + last);
+    println!("concat: {}",(first * 10) + last);
     return (first * 10) + last;
 }
 
