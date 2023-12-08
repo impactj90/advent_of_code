@@ -4,52 +4,34 @@ use std::io::{BufRead, BufReader};
 fn find_digits(line: &String) -> (u32, u32) {
     let mut first: u32 = 0;
     let mut last: u32 = 0;
+    let mut range = 5;
 
-    let mut number_in_words = "".to_string();
-
-    for (idx, _) in line.chars().enumerate() {
-        println!();
-        //"abcone2threexyz"
-        // TODO: take fn have wrong params
-        for (_, char) in line.chars().enumerate().skip(idx).take(5) {
-            println!("{:?}", line.chars().enumerate().skip(idx).take(5).collect::<Vec<_>>());
-            if char.is_numeric() {
-                if first == 0 {
-                    first = char.to_digit(10).unwrap();
-                    println!();
-                    println!("added! (first): {}", first);
-                    break;
-                }
-                last = char.to_digit(10).unwrap();
-                println!();
-                println!("added! (last): {}", last);
+    for i in 0..=line.len() {
+        if (i + range) > line.len() {
+            if range == 0 {
                 break;
+            }
+            range = line.len() - i;
+        }
 
-            } else {
-                number_in_words.push(char);
-                if is_word_a_number(&number_in_words) {
-                    if first == 0 {
-                        first = map_word_to_number(&number_in_words)
-                            .expect("i expect a number word from 1 - 9");
+        for j in 0..=range {
+            let substring = &line[i..(i + j)];
 
-                        println!();
-                        println!("added! (first): {}", first);
-                        number_in_words = "".to_string();
-                        break;
-                    }
-                    last = map_word_to_number(&number_in_words)
-                        .expect("i expect a number word from 1 - 9");
-
-                    println!();
-                    println!("added! (last): {}", last);
-                    number_in_words = "".to_string();
-                    break;
+            if substring.len() == 1 && substring.chars().any(|c| c.is_digit(10)) {
+                println!("i: {}, j: {} | search: {}", i, j, substring);
+                if first == 0 {
+                    first = substring.parse::<u32>().expect("String to be a number string");
                 }
+                last = substring.parse::<u32>().expect("String to be a number string")
+            }
 
-                if number_in_words.len() == 5 {
-                    number_in_words = "".to_string();
-                    break;
+            if is_word_a_number(substring) {
+                println!("i: {}, j: {} | search: {}", i, j, substring);
+                if first == 0 {
+                    first = parse_word_to_number(substring)
+                        .expect("Expexted a word associated Number.");
                 }
+                last = parse_word_to_number(substring).expect("Expexted a word associated Number.");
             }
         }
     }
@@ -57,16 +39,16 @@ fn find_digits(line: &String) -> (u32, u32) {
     return (first, last);
 }
 
-fn is_word_a_number(number_in_words: &String) -> bool {
-    if number_in_words.len() >= 3 && number_in_words.contains("one")
-        || number_in_words.contains("two")
-        || number_in_words.contains("three")
-        || number_in_words.contains("four")
-        || number_in_words.contains("five")
-        || number_in_words.contains("six")
-        || number_in_words.contains("seven")
-        || number_in_words.contains("eight")
-        || number_in_words.contains("nine")
+fn is_word_a_number(number_in_words: &str) -> bool {
+    if number_in_words.len() >= 3 && number_in_words.eq("one")
+        || number_in_words.eq("two")
+        || number_in_words.eq("three")
+        || number_in_words.eq("four")
+        || number_in_words.eq("five")
+        || number_in_words.eq("six")
+        || number_in_words.eq("seven")
+        || number_in_words.eq("eight")
+        || number_in_words.eq("nine")
     {
         return true;
     }
@@ -74,7 +56,7 @@ fn is_word_a_number(number_in_words: &String) -> bool {
     return false;
 }
 
-fn map_word_to_number(string: &str) -> Option<u32> {
+fn parse_word_to_number(string: &str) -> Option<u32> {
     match string {
         s if s.contains("one") => Some(1),
         s if s.contains("two") => Some(2),
