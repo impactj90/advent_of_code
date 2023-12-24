@@ -3,21 +3,66 @@ use std::{
     io::{BufRead, BufReader},
 };
 
-fn main() {
-    let red = 12;
-    let blue = 14;
-    let green = 13;
+fn find_possible_games(data: Vec<String>) -> Vec<u32> {
+    let red_cubes = 12;
+    let green_cubes = 13;
+    let blue_cubes = 14;
 
+    return vec![0];
+}
+
+fn backup(l: String) {
+    let _game_data: Vec<_> = l
+        .split(&[':', ',', ';'][..])
+        .skip(1)
+        .map(|cube| cube.trim().to_string())
+        .into_iter()
+        .enumerate()
+        .map(|(idx, cube)| {
+            println!("{}, {:?}", idx, cube.split(" ").collect::<Vec<_>>());
+        })
+        .collect();
+}
+
+fn main() {
     let file = File::open("input.txt").expect("Unable to open the File");
     let buffer = BufReader::new(file);
 
-    for (idx, line) in buffer.lines().enumerate() {
-        let line = line.expect("unable to read line");
-        // extract to ds
+    for (_idx, line) in buffer.lines().enumerate() {
+        let games = line.expect("unable to read line");
 
-        // "Game 97: 6 red, 1 blue, 7 green; 2 blue, 5 red, 7 green; 8 red, 3 blue, 6 green; 6 green, 1 red, 3 blue; 5 red, 2 blue, 14 green; 3 green, 6 red, 6 blue"
-        // let v: Vec<&str> = "2020-11-03 23:59".split(&['-', ' ', ':', '@'][..]).collect();
-        let g: Vec<&str> = line.split(&[',', ':', ';'][..]).skip(1).collect();
-        println!("idx: [{}] - {:?}", idx + 1, g);
+        let mut r: Vec<u32> = vec![];
+        let mut b: Vec<u32> = vec![];
+        let mut g: Vec<u32> = vec![];
+
+        let splitted_game: Vec<_> = games.split(&[',', ';', ':'][..]).skip(1).collect();
+
+        //[" 5 red", " 9 green", " 2 blue", " 9 blue", " 6 green", " 1 red", " 8 blue", " 7 green", " 3 red"]
+        println!("game: {:?}", splitted_game);
+
+        for lines in splitted_game.iter() {
+            let data = lines.trim_start().split(" ").collect::<Vec<_>>();
+
+            if data.contains(&"red") {
+                let number = data[0].parse::<u32>().unwrap();
+                r.push(number)
+            }
+            if data.contains(&"blue") {
+                let number = data[0].parse::<u32>().unwrap();
+                b.push(number)
+            }
+            if data.contains(&"green") {
+                let number = data[0].parse::<u32>().unwrap();
+                g.push(number)
+            }
+
+            println!("{:?}", data);
+        }
+
+        println!("{:?}", r);
+        println!("{:?}", b);
+        println!("{:?}", g);
+
+        //Game 100: 5 red, 9 green, 2 blue; 9 blue, 6 green, 1 red; 8 blue, 7 green, 3 red
     }
 }
