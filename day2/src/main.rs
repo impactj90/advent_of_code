@@ -27,8 +27,13 @@ fn backup(l: String) {
 fn main() {
     let file = File::open("input.txt").expect("Unable to open the File");
     let buffer = BufReader::new(file);
+    let mut possible_game_number_sum: u32 = 0;
 
-    for (_idx, line) in buffer.lines().enumerate() {
+    let red_cubes = 12;
+    let green_cubes = 13;
+    let blue_cubes = 14;
+
+    for (idx, line) in buffer.lines().enumerate() {
         let games = line.expect("unable to read line");
 
         let mut r: Vec<u32> = vec![];
@@ -59,9 +64,17 @@ fn main() {
             println!("{:?}", data);
         }
 
-        println!("{:?}", r);
-        println!("{:?}", b);
-        println!("{:?}", g);
+        let sum_r: u32 = r.iter().sum();
+        let sum_b: u32 = b.iter().sum();
+        let sum_g: u32 = g.iter().sum();
+
+        if sum_r < red_cubes {
+            possible_game_number_sum += idx
+        }
+
+        println!("{:?}", sum_r);
+        println!("{:?}", sum_b);
+        println!("{:?}", sum_g);
 
         //Game 100: 5 red, 9 green, 2 blue; 9 blue, 6 green, 1 red; 8 blue, 7 green, 3 red
     }
