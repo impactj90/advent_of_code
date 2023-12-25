@@ -56,7 +56,23 @@ fn main() {
         }
         valid_game_total += index + 1;
     }
-    println!("{}", valid_game_total)
+
+    // pt 2 starts here
+    let mut power_sum = 0;
+    for game in game.games.iter() {
+        let mut red = 0;
+        let mut green = 0;
+        let mut blue = 0;
+
+        for turn in game {
+            red = red.max(turn.red);
+            green = green.max(turn.green);
+            blue = blue.max(turn.blue);
+        }
+        power_sum += red * green * blue;
+    }
+
+    println!("{}", power_sum)
 }
 
 #[derive(Debug, Default)]
